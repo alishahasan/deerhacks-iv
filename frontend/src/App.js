@@ -143,6 +143,8 @@ function App() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState([]);
   const [matches, setMatches] = useState([]);
+  const [stylePercentages, setStylePercentages] = useState([]);
+  const [preferencePercentages, setPreferencePercentages] = useState([]);
 
   const questions = role === 'student' ? studentQuestions : taQuestions;
 
@@ -164,6 +166,7 @@ function App() {
       console.error('Error starting quiz:', error);
     }
   };
+
 
 
   const handleAnswer = async (optionIndex) => {
@@ -210,6 +213,34 @@ function App() {
       }
     }
   };
+  const calculateResults = () => {
+    const styleCounts = {};
+    const preferenceCounts = {};
+    const totalStyleQuestions = 4;
+    const totalPreferenceQuestions = 3;
+    
+    answers.forEach(answer => {
+      if (answer.style) {
+        styleCounts[answer.style] = (styleCounts[answer.style] || 0) + 1;
+      }
+      if (answer.preference) {
+        preferenceCounts[answer.preference] = (preferenceCounts[answer.preference] || 0) + 1;
+      }
+    });
+    
+    const stylePercentages = Object.keys(styleCounts).map(style => ({
+      name: style,
+      percentage: ((styleCounts[style] / totalStyleQuestions) * 100).toFixed(2)
+    }));
+    
+    const preferencePercentages = Object.keys(preferenceCounts).map(preference => ({
+      name: preference,
+      percentage: ((preferenceCounts[preference] / totalPreferenceQuestions) * 100).toFixed(2)
+    }));
+    
+    setStylePercentages(stylePercentages);
+    setPreferencePercentages(preferencePercentages);
+  };
 
   const prevQuestion = () => {
     if (currentQuestion > 0) {
@@ -255,6 +286,11 @@ function App() {
               ← Previous
             </button>
           )}
+           {currentQuestion === questions.length - 1 ? (
+            <button onClick={() => setStep(3)} className="finish-button">
+              Finish Quiz
+            </button>
+          ) : null}
           <div className="progress-bar">
             <div 
               className="progress"
@@ -286,6 +322,30 @@ function App() {
         ) : (
           <p>Your responses have been recorded.</p>
         )}
+        {/* New section for Style and Preference breakdown */}
+      <div className="results">
+          <h3>Learning/Teaching Style:</h3>
+            {stylePercentages.length != 0 ? (
+              <ul>
+                {stylePercentages.map(({ name, percentage }) => (
+                  <li key={name}>{name}: {percentage}%</li>
+                ))}
+              </ul>
+            ) : (
+              <p>No style preferences recorded.</p>
+            )}
+
+            <h3>Learning/Teaching Preferences:</h3>
+            {preferencePercentages.length != 0 ? (
+              <ul>
+                {preferencePercentages.map(({ name, percentage }) => (
+                  <li key={name}>{name}: {percentage}%</li>
+                ))}
+              </ul>
+            ) : (
+              <p>No other preferences recorded.</p>
+    )}
+      </div>
         <button onClick={() => {
           setRole(null);
           setStep(0);
