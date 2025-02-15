@@ -410,7 +410,7 @@ if (step === 2) {
             </button>
           )}
            {currentQuestion === questions.length - 1 ? (
-            <button onClick={() => setStep(3)} className="finish-button">
+            <button onClick={() => setStep(4)} className="finish-button">
               Finish Quiz
             </button>
           ) : null}
