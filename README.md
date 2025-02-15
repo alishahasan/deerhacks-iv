@@ -16,8 +16,11 @@ this should open a localhost window in a browser with the app working
 if you have any issues try gpting it or text me
 
 some issues you probably won't face but just in case:
+
 if you have mac and get permission denied run: pip install -g npm OR sudo npm install -g npm
+
 i don't think this will happen but in case it does: if you get an error that says "port 3000 already in use" run
+
 - WINDOWS: netstat -ano | findstr :3000 AND THEN taskkill /PID <PID> \F (NOTE THESE ARE TWO SEPARATE COMMANDS)
 - MAC: lsof -i :3000 AND THEN kill -9 <PID> (NOTE THESE ARE TWO SEPARATE COMMANDS)
 
