@@ -143,6 +143,8 @@ function App() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState([]);
   const [matches, setMatches] = useState([]);
+  const [stylePercentages, setStylePercentages] = useState([]);
+  const [preferencePercentages, setPreferencePercentages] = useState([]);
 
   const questions = role === 'student' ? studentQuestions : taQuestions;
 
@@ -166,22 +168,31 @@ function App() {
   };
 
 
+
   const handleAnswer = async (optionIndex) => {
-    const newAnswers = [...answers, {
+    const selectedOption = questions[currentQuestion].options[optionIndex];
+  
+    const newAnswers = {
       questionNumber: currentQuestion + 1,
       answerIndex: optionIndex,
-      ...(role === 'student' 
-        ? { learningPreference: questions[currentQuestion].options[optionIndex].preference }
-        : { teachingStyle: questions[currentQuestion].options[optionIndex].style }
-      )
-    }];
+    };
+  
+
+    if (selectedOption.preference) {
+        newAnswers.preference = selectedOption.preference
+    }
+    if (selectedOption.style) {
+        newAnswers.style = selectedOption.style;
+    }
     
-    setAnswers(newAnswers);
+    const updatedAnswers = [...answers, newAnswers];
+    setAnswers(updatedAnswers);
 
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
-      // Submit all responses
+      console.log('Submitting responses:', updatedAnswers);
+      calculateResults();
       try {
         const response = await fetch('http://localhost:5001/submit-responses', {
           method: 'POST',
@@ -203,6 +214,34 @@ function App() {
         console.error('Error submitting responses:', error);
       }
     }
+  };
+  const calculateResults = () => {
+    const styleCounts = {};
+    const preferenceCounts = {};
+    const totalStyleQuestions = 4;
+    const totalPreferenceQuestions = 3;
+    
+    answers.forEach(answer => {
+      if (answer.style) {
+        styleCounts[answer.style] = (styleCounts[answer.style] || 0) + 1;
+      }
+      if (answer.preference) {
+        preferenceCounts[answer.preference] = (preferenceCounts[answer.preference] || 0) + 1;
+      }
+    });
+    
+    const stylePercentages = Object.keys(styleCounts).map(style => ({
+      name: style,
+      percentage: ((styleCounts[style] / totalStyleQuestions) * 100).toFixed(2)
+    }));
+    
+    const preferencePercentages = Object.keys(preferenceCounts).map(preference => ({
+      name: preference,
+      percentage: ((preferenceCounts[preference] / totalPreferenceQuestions) * 100).toFixed(2)
+    }));
+    
+    setStylePercentages(stylePercentages);
+    setPreferencePercentages(preferencePercentages);
   };
 
   const prevQuestion = () => {
@@ -249,6 +288,11 @@ function App() {
               ← Previous
             </button>
           )}
+           {currentQuestion === questions.length - 1 ? (
+            <button onClick={() => setStep(3)} className="finish-button">
+              Finish Quiz
+            </button>
+          ) : null}
           <div className="progress-bar">
             <div 
               className="progress"
@@ -280,6 +324,30 @@ function App() {
         ) : (
           <p>Your responses have been recorded.</p>
         )}
+        {/* New section for Style and Preference breakdown */}
+      <div className="results">
+          <h3>Learning/Teaching Style:</h3>
+            {stylePercentages.length != 0 ? (
+              <ul>
+                {stylePercentages.map(({ name, percentage }) => (
+                  <li key={name}>{name}: {percentage}%</li>
+                ))}
+              </ul>
+            ) : (
+              <p>No style preferences recorded.</p>
+            )}
+
+            <h3>Learning/Teaching Preferences:</h3>
+            {preferencePercentages.length != 0 ? (
+              <ul>
+                {preferencePercentages.map(({ name, percentage }) => (
+                  <li key={name}>{name}: {percentage}%</li>
+                ))}
+              </ul>
+            ) : (
+              <p>No other preferences recorded.</p>
+    )}
+      </div>
         <button onClick={() => {
           setRole(null);
           setStep(0);
