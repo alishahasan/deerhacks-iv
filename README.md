@@ -1,4 +1,5 @@
 READ THIS FIRST TO GET SET UP :D
+
 git clone the repo from github
 
 open it in vscode or some text editor like that (or terminal if you want)
