@@ -147,6 +147,9 @@ function App() {
   const questions = role === 'student' ? studentQuestions : taQuestions;
 
   const startQuiz = async (selectedRole) => {
+    setRole(selectedRole);
+    setStep(1);  // Immediately show the quiz
+  
     try {
       const response = await fetch('http://localhost:5001/start-quiz', {
         method: 'POST',
@@ -157,12 +160,11 @@ function App() {
       });
       const data = await response.json();
       setUserId(data.userId);
-      setRole(selectedRole);
-      setStep(1);
     } catch (error) {
       console.error('Error starting quiz:', error);
     }
   };
+
 
   const handleAnswer = async (optionIndex) => {
     const newAnswers = [...answers, {
