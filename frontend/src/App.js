@@ -138,7 +138,6 @@ const taQuestions = [
 ];
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [role, setRole] = useState(null);
   const [userId, setUserId] = useState(null);
   const [step, setStep] = useState(0);
