@@ -146,6 +146,30 @@ function App() {
   const [stylePercentages, setStylePercentages] = useState([]);
   const [preferencePercentages, setPreferencePercentages] = useState([]);
 
+  // State for login form
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+
+  // Function to handle login
+  const handleLogin = async () => {
+    // Basic validation (you can replace with real authentication logic)
+    if (email === '' || password === '') {
+      setLoginError('Please enter both username and password.');
+      return;
+    }
+
+    // Simulating a successful login (replace with actual authentication logic)
+    const isValidUser = true; // Replace with your login validation logic
+    
+    if (isValidUser) {
+      setLoginError('');
+      setStep(2); // Proceed to quiz page after successful login
+    } else {
+      setLoginError('Invalid username or password.');
+    }
+  };
+
   const questions = role === 'student' ? studentQuestions : taQuestions;
 
   const startQuiz = async (selectedRole) => {
@@ -296,6 +320,36 @@ function App() {
   }
 
   if (step === 1) {
+    // Login Page
+    return (
+      <div className="app-container">
+        <div className="login">
+          <h2>{role === 'student' ? 'Student Login' : 'TA Login'}</h2>
+          <div>
+            <label>UofT Email:</label>
+            <input
+              type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div>
+            <label>Password:</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          {loginError && <p className="error">{loginError}</p>}
+          <button onClick={handleLogin}>Login</button>
+        </div>
+      </div>
+    );
+  }
+
+  // changed quiz to step 2, we'll change this to dashboard later and shift all the stpes iwhtin the quiz down
+  if (step === 2) {
     return (
       <div className="app-container">
         <div className="quiz">
