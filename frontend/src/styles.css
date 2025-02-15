@@ -136,6 +136,21 @@
   button:active {
     transform: translateY(2px);
   }
+
+  .login input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 25px; /* Make input fields rounded */
+    outline: none;
+    transition: all 0.3s ease;
+  }
+
+  .login input:focus {
+    border-color: #2575fc;
+    box-shadow: 0 0 5px rgba(37, 117, 252, 0.5);
+  }
   
   @keyframes fadeInUp {
     from {
