@@ -167,12 +167,18 @@ function App() {
 
 
   const handleAnswer = async (optionIndex) => {
+    const question = questions[currentQuestion];
+    const selectedOption = question.options[optionIndex];
+    
+    // Get the appropriate preference/style from the option
+    const preferenceOrStyle = selectedOption.style || selectedOption.preference;
+    
     const newAnswers = [...answers, {
       questionNumber: currentQuestion + 1,
       answerIndex: optionIndex,
       ...(role === 'student' 
-        ? { learningPreference: questions[currentQuestion].options[optionIndex].preference }
-        : { teachingStyle: questions[currentQuestion].options[optionIndex].style }
+        ? { learningPreference: preferenceOrStyle }
+        : { teachingStyle: preferenceOrStyle }
       )
     }];
     
