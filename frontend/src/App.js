@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './styles.css';
 
+
 const studentQuestions = [
   { 
     text: "When learning something new, I understand best when:", 
@@ -137,6 +138,7 @@ const taQuestions = [
 ];
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [role, setRole] = useState(null);
   const [userId, setUserId] = useState(null);
   const [step, setStep] = useState(0);
@@ -165,16 +167,18 @@ function App() {
     if (isValidUser) {
       setLoginError('');
       setStep(2); // Proceed to quiz page after successful login
+
     } else {
       setLoginError('Invalid username or password.');
     }
   };
 
+
   const questions = role === 'student' ? studentQuestions : taQuestions;
 
   const startQuiz = async (selectedRole) => {
     setRole(selectedRole);
-    setStep(1);  // Immediately show the quiz
+    setStep(3);  // Immediately show the quiz
   
     try {
       const response = await fetch('http://localhost:5001/start-quiz', {
@@ -262,7 +266,7 @@ function App() {
           if (data.matches) {
             setMatches(data.matches);
           }
-          setStep(3); // Move to results page
+          setStep(4); // Move to results page
       } catch (error) {
         console.error('Error submitting responses:', error);
       }
@@ -304,6 +308,13 @@ function App() {
     }
   };
 
+  const goLogin = async (selectedRole) => {
+    setRole(selectedRole);
+    setStep(1);  // Immediately show the quiz
+
+  };
+
+
   if (step === 0) {
     return (
       <div className="app-container">
@@ -311,8 +322,8 @@ function App() {
           <h1>Ready to discover your style?</h1>
           <h2>Are you a...</h2>
           <div className="role-buttons">
-            <button onClick={() => startQuiz('student')}>Student</button>
-            <button onClick={() => startQuiz('ta')}>Teaching Assistant</button>
+            <button onClick={() => goLogin('student')}>Student</button>
+            <button onClick={() => goLogin('ta')}>Teaching Assistant</button>
           </div>
         </div>
       </div>
@@ -349,7 +360,35 @@ function App() {
   }
 
   // changed quiz to step 2, we'll change this to dashboard later and shift all the stpes iwhtin the quiz down
-  if (step === 2) {
+if (step === 2) {
+  return (
+    <div>
+      <h1>Dashboard</h1>
+      <div>
+        <h2>Quiz Section</h2>
+        <button onClick={() => startQuiz(role)}>Take the Quiz</button>
+        <div>
+          <p>Your quiz results will appear here.</p>
+        </div>
+      </div>
+      <div>
+        <h2>Your Classes</h2>
+        <button onClick={() => alert('Adding Class...')}>Add Class</button>
+        <div>
+          <p>You are currently registered in:</p>
+          <ul>
+            <li>Class 1</li>
+            <li>Class 2</li>
+            <li>Class 3</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+  }
+
+
+  if (step === 3) {
     return (
       <div className="app-container">
         <div className="quiz">
