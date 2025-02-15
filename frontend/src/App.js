@@ -193,21 +193,52 @@ function App() {
       // Submit all responses
       try {
         const response = await fetch('http://localhost:5001/submit-responses', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            userId,
-            role,
-            responses: newAnswers,
-          }),
-        });
-        const data = await response.json();
-        if (data.matches) {
-          setMatches(data.matches);
-        }
-        setStep(3); // Move to results page
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              userId,
+              role,
+              responses: newAnswers,
+            }),
+          });
+          const data = await response.json();
+          
+          // Process the responses to calculate percentages
+          const styleCounts = {};
+          const preferenceCounts = {};
+          
+          newAnswers.forEach(answer => {
+            const question = questions[answer.questionNumber - 1];
+            const option = question.options[answer.answerIndex];
+            
+            if (option.style) {
+              styleCounts[option.style] = (styleCounts[option.style] || 0) + 1;
+            }
+            if (option.preference) {
+              preferenceCounts[option.preference] = (preferenceCounts[option.preference] || 0) + 1;
+            }
+          });
+  
+          // Calculate percentages
+          const stylePercentages = Object.entries(styleCounts).map(([style, count]) => ({
+            name: style,
+            percentage: ((count / 4) * 100).toFixed(2) // First 4 questions are style questions
+          }));
+  
+          const preferencePercentages = Object.entries(preferenceCounts).map(([preference, count]) => ({
+            name: preference,
+            percentage: ((count / 3) * 100).toFixed(2) // Last 3 questions are preference questions
+          }));
+  
+          setStylePercentages(stylePercentages);
+          setPreferencePercentages(preferencePercentages);
+          
+          if (data.matches) {
+            setMatches(data.matches);
+          }
+          setStep(3); // Move to results page
       } catch (error) {
         console.error('Error submitting responses:', error);
       }
