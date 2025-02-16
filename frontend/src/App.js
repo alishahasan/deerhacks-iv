@@ -161,6 +161,18 @@ const courses = [
   { code: "CSC309", name: "Programming on the Web", lecture: "TR 2-3", tutorial: "F 11-12" }
 ];
 
+const taMatches = [
+    { name: "John Smith", style: "Visual", stylePercentage: 33, preference: "Lecture-style", preferencePercentage: 50, email: "john.smith@example.com" },
+    { name: "Jane Doe", style: "Auditory", stylePercentage: 100, preference: "Discussion", preferencePercentage: 100, email: "jane.doe@example.com" },
+    { name: "Alice Johnson", style: "Kinesthetic", stylePercentage: 50, preference: "Guided Practice", preferencePercentage: 33, email: "alice.johnson@example.com" },
+    { name: "Bob Brown", style: "Reading/Writing", stylePercentage: 66, preference: "Independent", preferencePercentage: 33, email: "bob.brown@example.com" },
+    { name: "Charlie Davis", style: "Visual", stylePercentage: 33, preference: "Discussion", preferencePercentage: 66, email: "charlie.davis@example.com" }
+  ];
+
+//   const matchedTAs = taMatches.filter(ta =>
+//   topStyle && ta.style === topStyle.name
+// );
+
 
 
 function App() {
@@ -173,6 +185,8 @@ function App() {
   const [stylePercentages, setStylePercentages] = useState([]);
   const [preferencePercentages, setPreferencePercentages] = useState([]);
   const [quizTaken, setQuizTaken] = useState(false);
+
+  console.log("TA Matches:", taMatches);
 
   const questions = role === 'student' ? studentQuestions : taQuestions;
   const subject = role === "student" ? "Learning" : "Teaching";
@@ -415,7 +429,6 @@ function App() {
   if (step === 2) {
     return (
       <div className="app-container min-h-screen bg-gray-100">
-        <Logo />
         <div className="flex min-h-[calc(100vh-100px)] p-6 gap-8">
           {/* Left Panel - Take the Quiz */}
           <div className="w-1/3 bg-white rounded-lg p-6 h-fit">
@@ -486,14 +499,9 @@ function App() {
                       <br />
                       <span className="text-sm text-gray-600">
                       </span>
-                      {role === 'student' && ( // Fixed syntax error here
-                          <button 
-                            onClick={() => { setStep(5); setSelectedCourse(course.code); }} 
-                            className="mt-4 text-blue-600 hover:text-blue-800 font-semibold"
-                          >
-                            View Course Details →
-                          </button>
-                        )}
+                      <button onClick={() => {setStep(5); setSelectedCourse(course.code);}} className="mt-4 text-blue-600 hover:text-blue-800 font-semibold">
+                        View Course Details →
+                      </button>
                       <br></br>
                     </p>
                   ))
@@ -570,10 +578,21 @@ const normalizeKey = (key) => key.trim().toLowerCase();
 const topStyle = stylePercentages.length > 0 ? stylePercentages.reduce((max, item) => item.percentage > max.percentage ? item : max, stylePercentages[0]) : null;
 const topPreference = preferencePercentages.length > 0 ? preferencePercentages.reduce((max, item) => item.percentage > max.percentage ? item : max, preferencePercentages[0]) : null;
 
+const getMatchedTAs = () => {
+    if (!topStyle) return []; // No matches if topStyle isn't set
+  
+    return taMatches.filter(ta => 
+      ta.style.toLowerCase() === topStyle.name.toLowerCase()
+    );
+  };
+  
+  // Call this function only when needed
+  const matchedTAs = getMatchedTAs();
+  
+
   if (step === 5) {
     return (
       <div className="app-container">
-        <Logo />
           <h2 className="text-2xl font-bold mb-4">Course Matches</h2>
   
           {selectedCourse ? (
@@ -581,20 +600,22 @@ const topPreference = preferencePercentages.length > 0 ? preferencePercentages.r
               <p className="text-lg font-medium text-gray-800">
                 Viewing details for <span className="font-bold">{selectedCourse}</span>
               </p>
-
-              <br></br>
   
               {quizTaken ? (
                 <>
                   <h3 className="text-xl font-semibold mt-6">Top TA Matches:</h3>
-                  {matches.length > 0 ? (
+                  {matchedTAs.length > 0 ? (
                     <ul className="mt-4 space-y-2">
-                      {matches.map((match, index) => (
-                        <li key={index} className="p-3 bg-gray-100 rounded-md shadow-sm">
+                      {matchedTAs.map((match, index) => (
+                        <p key={index} className="p-3 bg-gray-100 rounded-md shadow-sm">
                           <span className="font-semibold">{match.name}</span>
+                          <br></br>
                           <p className="text-sm text-gray-600">{match.email}</p>
-                          <p className="text-sm text-gray-600">Matching Styles: {match.matching_styles}</p>
-                        </li>
+                          <br></br>
+                          <p className="text-sm text-gray-600">Matching Style: {match.style}</p>
+                          <br></br>
+                          <p className="text-sm text-gray-600">Teaching Preference: {match.preference} (Your preference for this was {match.preferencePercentage}%)</p>
+                        </p>
                       ))}
                     </ul>
                   ) : (
@@ -604,7 +625,6 @@ const topPreference = preferencePercentages.length > 0 ? preferencePercentages.r
               ) : (
                 <p className="mt-4 text-red-500 font-medium">Oops! You can't match with a TA without taking the quiz first...</p>
               )}
-              <br></br>
             </>
           ) : (
             <p className="text-gray-500 italic">No course selected.</p>
@@ -617,7 +637,6 @@ const topPreference = preferencePercentages.length > 0 ? preferencePercentages.r
   // Results page
   return (
     <div className="app-container">
-      <Logo />
       <div className="landing">
         <h1>Quiz Complete!</h1>
         {role === 'student' && matches.length > 0 ? (
