@@ -653,7 +653,7 @@ const topPreference = preferencePercentages.length > 0 ? preferencePercentages.r
 
         <button onClick={() => {
           setRole(null);
-          setStep(0);
+          setStep(3);
           setCurrentQuestion(0);
           setAnswers([]);
           setMatches([]);
