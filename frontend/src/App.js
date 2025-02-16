@@ -347,8 +347,6 @@ function App() {
     setPreferencePercentages(preferencePercentages);
   };
 
-  const displayResults = () => {
-  };
 
   const prevQuestion = () => {
     if (currentQuestion > 0) {
@@ -484,7 +482,7 @@ function App() {
                       <span className="text-sm text-gray-600">
                         {course.lecture} {course.tutorial || course.lab}
                       </span>
-                      <button className="mt-4 text-blue-600 hover:text-blue-800 font-semibold">
+                      <button onClick={() => {setStep(5); setSelectedCourse(course.code);}} className="mt-4 text-blue-600 hover:text-blue-800 font-semibold">
                         View Course Details →
                       </button>
                     </li>
@@ -559,11 +557,51 @@ const preferenceDescriptions = {
 const normalizeKey = (key) => key.trim().toLowerCase();
 
 // Get the highest percentage style and preference
-const topStyle = stylePercentages.reduce((max, item) => item.percentage > max.percentage ? item : max, stylePercentages[0]);
-const topPreference = preferencePercentages.reduce((max, item) => item.percentage > max.percentage ? item : max, preferencePercentages[0]);
+const topStyle = stylePercentages.length > 0 ? stylePercentages.reduce((max, item) => item.percentage > max.percentage ? item : max, stylePercentages[0]) : null;
+const topPreference = preferencePercentages.length > 0 ? preferencePercentages.reduce((max, item) => item.percentage > max.percentage ? item : max, preferencePercentages[0]) : null;
 
-// Results page
-return (
+  if (step === 5) {
+    return (
+      <div className="app-container">
+          <h2 className="text-2xl font-bold mb-4">Course Matches</h2>
+  
+          {selectedCourse ? (
+            <>
+              <p className="text-lg font-medium text-gray-800">
+                Viewing details for <span className="font-bold">{selectedCourse}</span>
+              </p>
+  
+              {quizTaken ? (
+                <>
+                  <h3 className="text-xl font-semibold mt-6">Top TA Matches:</h3>
+                  {matches.length > 0 ? (
+                    <ul className="mt-4 space-y-2">
+                      {matches.map((match, index) => (
+                        <li key={index} className="p-3 bg-gray-100 rounded-md shadow-sm">
+                          <span className="font-semibold">{match.name}</span>
+                          <p className="text-sm text-gray-600">{match.email}</p>
+                          <p className="text-sm text-gray-600">Matching Styles: {match.matching_styles}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="mt-4 text-red-500 font-medium">No matches found for this course.</p>
+                  )}
+                </>
+              ) : (
+                <p className="mt-4 text-red-500 font-medium">Please take the quiz first!</p>
+              )}
+            </>
+          ) : (
+            <p className="text-gray-500 italic">No course selected.</p>
+          )}
+          <button onClick={() => { setStep(2); setSelectedCourse(null); }}>Dashboard</button>
+        </div>
+    );
+  }
+  
+  // Results page
+  return (
     <div className="app-container">
       <div className="landing">
         <h1>Quiz Complete!</h1>
@@ -582,6 +620,7 @@ return (
         ) : (
           <p></p>
         )}
+        <br></br>
         
         {/* Results Section */}
         <div className="results">
@@ -596,8 +635,8 @@ return (
           ) : (
             <p className="text-gray-700 mt-4 text-left leading-relaxed">No style preferences recorded.</p>
           )}
-  
           <br></br>
+  
           <h2 className="mt-12 text-center">{subject} Preferences:</h2>
           {topPreference ? (
             <p className="text-gray-700 mt-4 text-left leading-relaxed">
@@ -626,5 +665,4 @@ return (
     </div>
   );
 }
-
 export default App;
