@@ -153,6 +153,14 @@ function App() {
   const questions = role === 'student' ? studentQuestions : taQuestions;
   const subject = role === "student" ? "Learning" : "Teaching";
 
+  const courses = [
+    { code: "CSC263", name: "Data Structures and Analysis", lecture: "MW 10-11", tutorial: "F 2-3" },
+    { code: "CSC258", name: "Computer Organization", lecture: "TR 11-12", lab: "W 3-5" },
+    { code: "CSC209", name: "Software Tools and Systems Programming", lecture: "MW 1-2", tutorial: "R 4-5" },
+    { code: "CSC309", name: "Programming on the Web", lecture: "TR 2-3", tutorial: "F 11-12" }
+  ];
+
+
 
   //Dashboard Classes
   const [classes, setClasses] = useState(["Class 1", "Class 2", "Class 3"]);
@@ -382,76 +390,62 @@ function App() {
   // changed quiz to step 2, we'll change this to dashboard later and shift all the stpes iwhtin the quiz down
   if (step === 2) {
     return (
-      <div className="app-container">
-        <Logo />
-        <div className="flex w-full gap-8 p-6">
-          {/* Left Section - Quiz */}
-          <div className="w-1/3 bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-2xl font-bold mb-4">{subject} Style</h2>
-            {!quizTaken ? (
-              <div className="text-center">
-                <p className="mb-4">Take the quiz to discover your {subject} style.</p>
-                <button 
-                  onClick={() => startQuiz(role)}
-                  className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
-                >
-                  Take the Quiz
-                </button>
-              </div>
-            ) : (
-              <p>Your Results</p>
-              //<displayResults />
-            )}
+      <div className="app-container min-h-screen bg-gray-100">
+        <div className="flex min-h-[calc(100vh-100px)] p-6 gap-8">
+          {/* Left Panel - Take the Quiz */}
+          <div className="w-1/3 bg-white rounded-lg p-6 h-fit">
+            <div className="space-y-4">
+              <h2 className="text-2xl font-bold">Welcome!</h2>
+              {!quizTaken ? (
+                <div>
+                  <p className="mb-6">
+                    Want to find out your {subject.toLowerCase()} style? Take our quick quiz to get matched with TAs that suit your learning preferences.
+                  </p>
+                  <button 
+                    onClick={() => startQuiz(role)}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+                  >
+                    Take the Quiz
+                  </button>
+                </div>
+              ) : (
+                <div>
+                  <p className="text-gray-700">You've completed the quiz!</p>
+                  <button 
+                    onClick={() => setStep(4)}
+                    className="mt-4 w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+                  >
+                    View Your Results
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
   
-          {/* Right Section - Course Boxes */}
-          <div className="w-2/3">
-            <h2 className="text-2xl font-bold mb-4">Your Courses</h2>
-            <div className="grid grid-cols-2 gap-4">
-              {/* CSC263 Box */}
-              <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-                <h3 className="text-xl font-bold mb-2">CSC263</h3>
-                <p className="text-gray-600">Data Structures and Analysis</p>
-                <div className="mt-4">
-                  <button className="text-blue-500 hover:text-blue-600 font-semibold">
-                    View Details →
+          {/* Right Panel - Course Cards */}
+          <div className="w-2/3 grid grid-cols-2 gap-6">
+            {courses.map((course, index) => (
+              <div key={index} className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                <div className="p-6">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-xl font-bold text-gray-800">{course.code}</h3>
+                    <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">Winter 2024</span>
+                  </div>
+                  <p className="text-gray-600 mb-4">{course.name}</p>
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-500">
+                      <span className="font-medium">Lecture:</span> {course.lecture}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      <span className="font-medium">{course.tutorial ? 'Tutorial' : 'Lab'}:</span> {course.tutorial || course.lab}
+                    </p>
+                  </div>
+                  <button className="mt-4 text-blue-600 hover:text-blue-800 font-semibold">
+                    View Course Details →
                   </button>
                 </div>
               </div>
-  
-              {/* CSC258 Box */}
-              <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-                <h3 className="text-xl font-bold mb-2">CSC258</h3>
-                <p className="text-gray-600">Computer Organization</p>
-                <div className="mt-4">
-                  <button className="text-blue-500 hover:text-blue-600 font-semibold">
-                    View Details →
-                  </button>
-                </div>
-              </div>
-  
-              {/* CSC209 Box */}
-              <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-                <h3 className="text-xl font-bold mb-2">CSC209</h3>
-                <p className="text-gray-600">Software Tools and Systems Programming</p>
-                <div className="mt-4">
-                  <button className="text-blue-500 hover:text-blue-600 font-semibold">
-                    View Details →
-                  </button>
-                </div>
-              </div>
-  
-              {/* CSC309 Box */}
-              <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-                <h3 className="text-xl font-bold mb-2">CSC309</h3>
-                <p className="text-gray-600">Programming on the Web</p>
-                <div className="mt-4">
-                  <button className="text-blue-500 hover:text-blue-600 font-semibold">
-                    View Details →
-                  </button>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
