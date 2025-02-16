@@ -169,6 +169,12 @@ function App() {
     alert("Adding Class...");
   };
 
+  const startQuiz = async (selectedRole) => {
+    setRole(selectedRole);
+    setStep(3);
+  }
+  
+
   // State for login form
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
