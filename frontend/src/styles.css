@@ -151,6 +151,22 @@
     border-color: #2575fc;
     box-shadow: 0 0 5px rgba(37, 117, 252, 0.5);
   }
+
+  /* Add this to your existing styles.css file */
+.back-button {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+.back-button:hover {
+  color: #1a4db8;
+}
   
   @keyframes fadeInUp {
     from {
@@ -162,3 +178,4 @@
       transform: translateY(0);
     }
   }
+  

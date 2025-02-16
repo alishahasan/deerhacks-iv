@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import './styles.css';
+import Logo from './Logo';
+
 
 
 const studentQuestions = [
@@ -325,6 +327,7 @@ function App() {
   if (step === 0) {
     return (
       <div className="app-container">
+        <Logo />
         <div className="landing">
           <h1>Ready to discover your style?</h1>
           <h2>Are you a...</h2>
@@ -341,7 +344,9 @@ function App() {
     // Login Page
     return (
       <div className="app-container">
+        <Logo />
         <div className="login">
+          <button className="back-button" onClick={() => setStep(0)}>←</button>
           <h2>{role === 'student' ? 'Student Login' : 'TA Login'}</h2>
           <div>
             <label>UofT Email:</label>
@@ -370,6 +375,7 @@ function App() {
 if (step === 2) {
   return (
     <div className="app-container">
+        <Logo />
         <div className="Dashboard">
               <h2> {subject} Style</h2>
               <button onClick={() => startQuiz(role)}>Take the Quiz</button>
@@ -397,6 +403,7 @@ if (step === 2) {
   if (step === 3) {
     return (
       <div className="app-container">
+        <Logo />
         <div className="quiz">
           <h2>Question {currentQuestion + 1} of {questions.length}</h2>
           <h3>{questions[currentQuestion].text}</h3>
