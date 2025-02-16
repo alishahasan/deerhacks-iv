@@ -423,12 +423,14 @@ function App() {
                   <p className="mb-6">
                     Want to find out your {subject.toLowerCase()} style? Take our quick quiz to get matched with TAs that suit your learning preferences.
                   </p>
+                  <br></br>
                   <button
                     onClick={() => startQuiz(role)}
                     className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
                   >
                     Take the Quiz
                   </button>
+                  <br></br>
                 </div>
               ) : (
                 <div>
@@ -443,7 +445,7 @@ function App() {
               )}
             </div>
           </div>
-    
+          <br></br>
           {/* Right Panel - Course Selection & Registered Courses */}
           <div className="w-2/3 bg-white rounded-lg p-6">
             <h2 className="text-xl font-bold mb-4">Your Classes</h2>
@@ -476,19 +478,19 @@ function App() {
               <ul className="mt-2 space-y-2">
                 {registeredClasses.length > 0 ? (
                   registeredClasses.map((course) => (
-                    <li key={course.code} className="p-3 bg-gray-100 rounded-md shadow-sm">
+                    <p key={course.code} className="p-3 bg-gray-100 rounded-md shadow-sm">
                       <span className="font-semibold">{course.code}</span> - {course.name}  
                       <br />
                       <span className="text-sm text-gray-600">
-                        {course.lecture} {course.tutorial || course.lab}
                       </span>
                       <button onClick={() => {setStep(5); setSelectedCourse(course.code);}} className="mt-4 text-blue-600 hover:text-blue-800 font-semibold">
                         View Course Details →
                       </button>
-                    </li>
+                      <br></br>
+                    </p>
                   ))
                 ) : (
-                  <p className="text-gray-500 italic">No classes registered.</p>
+                  <p className="text-gray-500 italic">No classes yet! Add a class :)</p>
                 )}
               </ul>
             </div>
@@ -570,6 +572,8 @@ const topPreference = preferencePercentages.length > 0 ? preferencePercentages.r
               <p className="text-lg font-medium text-gray-800">
                 Viewing details for <span className="font-bold">{selectedCourse}</span>
               </p>
+
+              <br></br>
   
               {quizTaken ? (
                 <>
@@ -589,8 +593,9 @@ const topPreference = preferencePercentages.length > 0 ? preferencePercentages.r
                   )}
                 </>
               ) : (
-                <p className="mt-4 text-red-500 font-medium">Please take the quiz first!</p>
+                <p className="mt-4 text-red-500 font-medium">Oops! You can't match with a TA without taking the quiz first...</p>
               )}
+              <br></br>
             </>
           ) : (
             <p className="text-gray-500 italic">No course selected.</p>
