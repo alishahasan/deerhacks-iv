@@ -139,6 +139,13 @@ const taQuestions = [
   // Add more TA questions here...
 ];
 
+const courses = [
+  { code: "CSC263", name: "Data Structures and Analysis", lecture: "MW 10-11", tutorial: "F 2-3" },
+  { code: "CSC258", name: "Computer Organization", lecture: "TR 11-12", lab: "W 3-5" },
+  { code: "CSC209", name: "Software Tools and Systems Programming", lecture: "MW 1-2", tutorial: "R 4-5" },
+  { code: "CSC309", name: "Programming on the Web", lecture: "TR 2-3", tutorial: "F 11-12" }
+];
+
 function App() {
   const [role, setRole] = useState(null);
   const [userId, setUserId] = useState(null);
@@ -153,20 +160,16 @@ function App() {
   const questions = role === 'student' ? studentQuestions : taQuestions;
   const subject = role === "student" ? "Learning" : "Teaching";
 
-  const courses = [
-    { code: "CSC263", name: "Data Structures and Analysis", lecture: "MW 10-11", tutorial: "F 2-3" },
-    { code: "CSC258", name: "Computer Organization", lecture: "TR 11-12", lab: "W 3-5" },
-    { code: "CSC209", name: "Software Tools and Systems Programming", lecture: "MW 1-2", tutorial: "R 4-5" },
-    { code: "CSC309", name: "Programming on the Web", lecture: "TR 2-3", tutorial: "F 11-12" }
-  ];
-
-
-
-  //Dashboard Classes
-  const [classes, setClasses] = useState(["Class 1", "Class 2", "Class 3"]);
+  const [registeredClasses, setRegisteredClasses] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState(""); // Store selected course code
 
   const addClass = () => {
-    alert("Adding Class...");
+    const courseToAdd = courses.find(course => course.code === selectedCourse);
+    if (courseToAdd && !registeredClasses.some(course => course.code === selectedCourse)) {
+      setRegisteredClasses([...registeredClasses, courseToAdd]);
+    } else {
+      alert("Course already added or invalid selection!");
+    }
   };
 
   const startQuiz = async (selectedRole) => {
@@ -407,7 +410,7 @@ function App() {
                   <p className="mb-6">
                     Want to find out your {subject.toLowerCase()} style? Take our quick quiz to get matched with TAs that suit your learning preferences.
                   </p>
-                  <button 
+                  <button
                     onClick={() => startQuiz(role)}
                     className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
                   >
@@ -417,7 +420,7 @@ function App() {
               ) : (
                 <div>
                   <p className="text-gray-700">You've completed the quiz!</p>
-                  <button 
+                  <button
                     onClick={() => setStep(4)}
                     className="mt-4 w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
                   >
@@ -427,31 +430,56 @@ function App() {
               )}
             </div>
           </div>
-  
-          {/* Right Panel - Course Cards */}
-          <div className="w-2/3 grid grid-cols-2 gap-6">
-            {courses.map((course, index) => (
-              <div key={index} className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                <div className="p-6">
-                  <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-xl font-bold text-gray-800">{course.code}</h3>
-                    <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">Winter 2024</span>
-                  </div>
-                  <p className="text-gray-600 mb-4">{course.name}</p>
-                  <div className="space-y-2">
-                    <p className="text-sm text-gray-500">
-                      <span className="font-medium">Lecture:</span> {course.lecture}
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      <span className="font-medium">{course.tutorial ? 'Tutorial' : 'Lab'}:</span> {course.tutorial || course.lab}
-                    </p>
-                  </div>
-                  <button className="mt-4 text-blue-600 hover:text-blue-800 font-semibold">
-                    View Course Details →
-                  </button>
-                </div>
-              </div>
-            ))}
+    
+          {/* Right Panel - Course Selection & Registered Courses */}
+          <div className="w-2/3 bg-white rounded-lg p-6">
+            <h2 className="text-xl font-bold mb-4">Your Classes</h2>
+    
+            {/* Course selection dropdown */}
+            <div className="flex items-center gap-4 mb-4">
+              <select
+                value={selectedCourse}
+                onChange={(e) => setSelectedCourse(e.target.value)}
+                className="border border-gray-300 p-2 rounded-md w-full"
+              >
+                <option value="">Select a course</option>
+                {courses.map((course) => (
+                  <option key={course.code} value={course.code}>
+                    {course.code} - {course.name}
+                  </option>
+                ))}
+              </select>
+              <button
+                onClick={addClass}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition-colors"
+              >
+                Add Class
+              </button>
+            </div>
+    
+            {/* Registered Courses */}
+            <div>
+              <p className="text-gray-700 font-medium">You are currently registered in:</p>
+              <ul className="mt-2 space-y-2">
+                {registeredClasses.length > 0 ? (
+                  registeredClasses.map((course) => (
+                    <li key={course.code} className="p-3 bg-gray-100 rounded-md shadow-sm">
+                      <span className="font-semibold">{course.code}</span> - {course.name}  
+                      <br />
+                      <span className="text-sm text-gray-600">
+                        {course.lecture} {course.tutorial || course.lab}
+                      </span>
+                    </li>
+                  ))
+                ) : (
+                  <p className="text-gray-500 italic">No classes registered.</p>
+                )}
+              </ul>
+            </div>
+    
+            <button className="mt-4 text-blue-600 hover:text-blue-800 font-semibold">
+              View Course Details →
+            </button>
           </div>
         </div>
       </div>
