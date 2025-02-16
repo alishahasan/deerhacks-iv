@@ -415,6 +415,7 @@ function App() {
   if (step === 2) {
     return (
       <div className="app-container min-h-screen bg-gray-100">
+        <Logo />
         <div className="flex min-h-[calc(100vh-100px)] p-6 gap-8">
           {/* Left Panel - Take the Quiz */}
           <div className="w-1/3 bg-white rounded-lg p-6 h-fit">
@@ -485,9 +486,14 @@ function App() {
                       <br />
                       <span className="text-sm text-gray-600">
                       </span>
-                      <button onClick={() => {setStep(5); setSelectedCourse(course.code);}} className="mt-4 text-blue-600 hover:text-blue-800 font-semibold">
-                        View Course Details →
-                      </button>
+                      {role === 'student' && ( // Fixed syntax error here
+                          <button 
+                            onClick={() => { setStep(5); setSelectedCourse(course.code); }} 
+                            className="mt-4 text-blue-600 hover:text-blue-800 font-semibold"
+                          >
+                            View Course Details →
+                          </button>
+                        )}
                       <br></br>
                     </p>
                   ))
@@ -567,6 +573,7 @@ const topPreference = preferencePercentages.length > 0 ? preferencePercentages.r
   if (step === 5) {
     return (
       <div className="app-container">
+        <Logo />
           <h2 className="text-2xl font-bold mb-4">Course Matches</h2>
   
           {selectedCourse ? (
@@ -610,6 +617,7 @@ const topPreference = preferencePercentages.length > 0 ? preferencePercentages.r
   // Results page
   return (
     <div className="app-container">
+      <Logo />
       <div className="landing">
         <h1>Quiz Complete!</h1>
         {role === 'student' && matches.length > 0 ? (
