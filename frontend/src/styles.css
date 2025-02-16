@@ -248,6 +248,78 @@ button:active {
   transform: translateX(-2px);
 }
 
+
+/* Course Selection Styles */
+.course-selection {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    width: 100%;
+    animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+  
+  .course-select {
+    width: 100%;
+    padding: 1rem 1.25rem;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.5rem;
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    outline: none;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(10px);
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  
+  .course-select:focus {
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
+  }
+  
+  .course-select option {
+    background: #4a1491;
+    color: #ffffff;
+    padding: 0.5rem;
+  }
+  
+  .add-class-btn {
+    padding: 0.875rem 1.75rem;
+    font-size: 1rem;
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.95);
+    color: #2575fc;
+    border: none;
+    border-radius: 3rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    white-space: nowrap;
+  }
+  
+  .add-class-btn:hover {
+    background: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  .add-class-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  @media (max-width: 768px) {
+    .course-selection {
+      flex-direction: column;
+    }
+    
+    .add-class-btn {
+      width: 100%;
+    }
+  }
+
 /* Animations */
 @keyframes fadeInUp {
   from {

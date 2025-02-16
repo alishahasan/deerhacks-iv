@@ -436,11 +436,11 @@ function App() {
             <h2 className="text-xl font-bold mb-4">Your Classes</h2>
     
             {/* Course selection dropdown */}
-            <div className="flex items-center gap-4 mb-4">
+            <div className="course-selection">
               <select
                 value={selectedCourse}
                 onChange={(e) => setSelectedCourse(e.target.value)}
-                className="border border-gray-300 p-2 rounded-md w-full"
+                className="course-select"
               >
                 <option value="">Select a course</option>
                 {courses.map((course) => (
@@ -451,7 +451,7 @@ function App() {
               </select>
               <button
                 onClick={addClass}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition-colors"
+                className="add-class btn"
               >
                 Add Class
               </button>
