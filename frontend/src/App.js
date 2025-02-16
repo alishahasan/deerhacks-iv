@@ -482,9 +482,14 @@ function App() {
                       <span className="text-sm text-gray-600">
                         {course.lecture} {course.tutorial || course.lab}
                       </span>
-                      <button onClick={() => {setStep(5); setSelectedCourse(course.code);}} className="mt-4 text-blue-600 hover:text-blue-800 font-semibold">
-                        View Course Details →
-                      </button>
+                      {role === 'student' && ( // Fixed syntax error here
+                          <button 
+                            onClick={() => { setStep(5); setSelectedCourse(course.code); }} 
+                            className="mt-4 text-blue-600 hover:text-blue-800 font-semibold"
+                          >
+                            View Course Details →
+                          </button>
+                        )}
                     </li>
                   ))
                 ) : (
@@ -627,8 +632,8 @@ const topPreference = preferencePercentages.length > 0 ? preferencePercentages.r
           <h2 className="mt-12 text-center">{subject} Style:</h2>
           {topStyle ? (
             <p className="text-gray-700 mt-4 text-left leading-relaxed">
-              <strong>{topStyle.name.charAt(0).toUpperCase() + topStyle.name.slice(1).toLowerCase()}</strong> ({topStyle.percentage}%): 
-              {" " + styleDescriptions[Object.keys(styleDescriptions).find(
+              <strong>{topStyle.name.charAt(0).toUpperCase() + topStyle.name.slice(1).toLowerCase()}</strong> ({topStyle.percentage}%):
+              {styleDescriptions[Object.keys(styleDescriptions).find(
                 key => normalizeKey(key) === normalizeKey(topStyle.name)
               )] || "No description available."}
             </p>
@@ -640,8 +645,8 @@ const topPreference = preferencePercentages.length > 0 ? preferencePercentages.r
           <h2 className="mt-12 text-center">{subject} Preferences:</h2>
           {topPreference ? (
             <p className="text-gray-700 mt-4 text-left leading-relaxed">
-              <strong>{topPreference.name.charAt(0).toUpperCase() + topPreference.name.slice(1).toLowerCase()}</strong> ({topPreference.percentage}%): 
-              {" " + preferenceDescriptions[Object.keys(preferenceDescriptions).find(
+              <strong>{topPreference.name.charAt(0).toUpperCase() + topPreference.name.slice(1).toLowerCase()}</strong> ({topPreference.percentage}%):
+              {preferenceDescriptions[Object.keys(preferenceDescriptions).find(
                 key => normalizeKey(key) === normalizeKey(topPreference.name)
               )] || "No description available."}
             </p>
