@@ -71,6 +71,21 @@ const studentQuestions = [
   // Add more student questions here...
 ];
 
+const styleDescriptions = {
+    'Visual': "You learn best through visual aids like diagrams, charts, and images. Visual learners excel at understanding information when it's presented in a graphical format.",
+    'Auditory': 'You learn effectively by listening and discussing. Auditory learners benefit from lectures, group discussions, and verbal explanations.',
+    'Kinesthetic': 'You learn through hands-on experience and physical activity. Kinesthetic learners thrive when they can touch, move, and interact with learning materials.',
+    'Reading/Writing': 'You prefer learning through written words. Reading/writing learners excel at taking notes, reading textbooks, and writing summaries of information.'
+  };
+  
+  const preferenceDescriptions = {
+    'Lecture-style': 'You appreciate structured presentations where an instructor explains concepts thoroughly. This traditional approach helps you grasp complex ideas systematically.',
+    'Discussion': 'You thrive in interactive environments where ideas are exchanged freely. Group discussions help you understand different perspectives and deepen your understanding.',
+    'Guided Practice': 'You learn best when theory is combined with practical application under instructor supervision. This balanced approach helps you build confidence while mastering new skills.',
+    'Independent': 'You excel at self-directed learning and prefer to work at your own pace. This approach allows you to deeply explore topics that interest you.'
+  };
+  
+
 const taQuestions = [
   {
     text: "When explaining a difficult concept, I prefer to:",
@@ -526,8 +541,29 @@ function App() {
     );
   }
 
-  // Results page
-  return (
+// Results page
+const styleDescriptions = {
+    'Visual': "You learn best through visual aids like diagrams, charts, and images. Visual learners excel at understanding information when it's presented in a graphical format.",
+    'Auditory': 'You learn effectively by listening and discussing. Auditory learners benefit from lectures, group discussions, and verbal explanations.',
+    'Kinesthetic': 'You learn through hands-on experience and physical activity. Kinesthetic learners thrive when they can touch, move, and interact with learning materials.',
+    'Reading/Writing': 'You prefer learning through written words. Reading/writing learners excel at taking notes, reading textbooks, and writing summaries of information.'
+};
+
+const preferenceDescriptions = {
+    'Lecture-style': 'You appreciate structured presentations where an instructor explains concepts thoroughly. This traditional approach helps you grasp complex ideas systematically.',
+    'Discussion': 'You thrive in interactive environments where ideas are exchanged freely. Group discussions help you understand different perspectives and deepen your understanding.',
+    'Guided Practice': 'You learn best when theory is combined with practical application under instructor supervision. This balanced approach helps you build confidence while mastering new skills.',
+    'Independent': 'You excel at self-directed learning and prefer to work at your own pace. This approach allows you to deeply explore topics that interest you.'
+};
+
+const normalizeKey = (key) => key.trim().toLowerCase();
+
+// Get the highest percentage style and preference
+const topStyle = stylePercentages.reduce((max, item) => item.percentage > max.percentage ? item : max, stylePercentages[0]);
+const topPreference = preferencePercentages.reduce((max, item) => item.percentage > max.percentage ? item : max, preferencePercentages[0]);
+
+// Results page
+return (
     <div className="app-container">
       <div className="landing">
         <h1>Quiz Complete!</h1>
@@ -537,40 +573,45 @@ function App() {
             <div className="matches">
               {matches.map((match, index) => (
                 <div key={index} className="match-card">
-                  <h3>{match.ta_name}</h3>
-                  <p>Matching Styles: {match.matching_styles}</p>
+                  <h3 className="mt-12 text-center">{match.ta_name}</h3>
+                  <p className="text-gray-700 mt-4 text-left leading-relaxed">Matching Styles: {match.matching_styles}</p>
                 </div>
               ))}
             </div>
           </div>
         ) : (
-          <p>Your responses have been recorded.</p>
+          <p></p>
         )}
         
-        {/* Rest of the results page remains the same */}
+        {/* Results Section */}
         <div className="results">
-          <h3>{subject} Style:</h3>
-          {stylePercentages.length !== 0 ? (
-            <ul>
-              {stylePercentages.map(({ name, percentage }) => (
-                <li key={name}>{name}: {percentage}%</li>
-              ))}
-            </ul>
+          <h2 className="mt-12 text-center">{subject} Style:</h2>
+          {topStyle ? (
+            <p className="text-gray-700 mt-4 text-left leading-relaxed">
+              <strong>{topStyle.name.charAt(0).toUpperCase() + topStyle.name.slice(1).toLowerCase()}</strong> ({topStyle.percentage}%):
+              {styleDescriptions[Object.keys(styleDescriptions).find(
+                key => normalizeKey(key) === normalizeKey(topStyle.name)
+              )] || "No description available."}
+            </p>
           ) : (
-            <p>No style preferences recorded.</p>
+            <p className="text-gray-700 mt-4 text-left leading-relaxed">No style preferences recorded.</p>
           )}
   
-          <h3>{subject} Preferences:</h3>
-          {preferencePercentages.length !== 0 ? (
-            <ul>
-              {preferencePercentages.map(({ name, percentage }) => (
-                <li key={name}>{name}: {percentage}%</li>
-              ))}
-            </ul>
+          <br></br>
+          <h2 className="mt-12 text-center">{subject} Preferences:</h2>
+          {topPreference ? (
+            <p className="text-gray-700 mt-4 text-left leading-relaxed">
+              <strong>{topPreference.name.charAt(0).toUpperCase() + topPreference.name.slice(1).toLowerCase()}</strong> ({topPreference.percentage}%):
+              {preferenceDescriptions[Object.keys(preferenceDescriptions).find(
+                key => normalizeKey(key) === normalizeKey(topPreference.name)
+              )] || "No description available."}
+            </p>
           ) : (
-            <p>No other preferences recorded.</p>
+            <p className="text-gray-700 mt-4 text-left leading-relaxed">No other preferences recorded.</p>
           )}
         </div>
+        <br></br>
+
         <button onClick={() => {
           setRole(null);
           setStep(0);
