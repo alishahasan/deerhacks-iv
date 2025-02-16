@@ -332,8 +332,6 @@ function App() {
     setPreferencePercentages(preferencePercentages);
   };
 
-  const displayResults = () => {
-  };
 
   const prevQuestion = () => {
     if (currentQuestion > 0) {
@@ -469,7 +467,7 @@ function App() {
                       <span className="text-sm text-gray-600">
                         {course.lecture} {course.tutorial || course.lab}
                       </span>
-                      <button className="mt-4 text-blue-600 hover:text-blue-800 font-semibold">
+                      <button onClick={() => {setStep(5); setSelectedCourse(course.code);}} className="mt-4 text-blue-600 hover:text-blue-800 font-semibold">
                         View Course Details →
                       </button>
                     </li>
@@ -527,63 +525,104 @@ function App() {
   }
 
   // Results page
-  return (
-    <div className="app-container">
-      <div className="landing">
-        <h1>Quiz Complete!</h1>
-        {role === 'student' && matches.length > 0 ? (
-          <div>
-            <h2>Your Top TA Matches:</h2>
-            <div className="matches">
-              {matches.map((match, index) => (
-                <div key={index} className="match-card">
-                  <h3>{match.ta_name}</h3>
-                  <p>Matching Styles: {match.matching_styles}</p>
-                </div>
-              ))}
+  if (step === 4) {
+    return (
+      <div className="app-container">
+        <div className="landing">
+          <h1>Quiz Complete!</h1>
+          {role === 'student' && matches.length > 0 ? (
+            <div>
+              <h2>Your Top TA Matches:</h2>
+              <div className="matches">
+                {matches.map((match, index) => (
+                  <div key={index} className="match-card">
+                    <h3>{match.ta_name}</h3>
+                    <p>Matching Styles: {match.matching_styles}</p>
+                  </div>
+                ))}
+              </div>
             </div>
+          ) : (
+            <p>Your responses have been recorded.</p>
+          )}
+          
+          {/* Rest of the results page remains the same */}
+          <div className="results">
+            <h3>{subject} Style:</h3>
+            {stylePercentages.length !== 0 ? (
+              <ul>
+                {stylePercentages.map(({ name, percentage }) => (
+                  <li key={name}>{name}: {percentage}%</li>
+                ))}
+              </ul>
+            ) : (
+              <p>No style preferences recorded.</p>
+            )}
+    
+            <h3>{subject} Preferences:</h3>
+            {preferencePercentages.length !== 0 ? (
+              <ul>
+                {preferencePercentages.map(({ name, percentage }) => (
+                  <li key={name}>{name}: {percentage}%</li>
+                ))}
+              </ul>
+            ) : (
+              <p>No other preferences recorded.</p>
+            )}
           </div>
-        ) : (
-          <p>Your responses have been recorded.</p>
-        )}
-        
-        {/* Rest of the results page remains the same */}
-        <div className="results">
-          <h3>{subject} Style:</h3>
-          {stylePercentages.length !== 0 ? (
-            <ul>
-              {stylePercentages.map(({ name, percentage }) => (
-                <li key={name}>{name}: {percentage}%</li>
-              ))}
-            </ul>
-          ) : (
-            <p>No style preferences recorded.</p>
-          )}
-  
-          <h3>{subject} Preferences:</h3>
-          {preferencePercentages.length !== 0 ? (
-            <ul>
-              {preferencePercentages.map(({ name, percentage }) => (
-                <li key={name}>{name}: {percentage}%</li>
-              ))}
-            </ul>
-          ) : (
-            <p>No other preferences recorded.</p>
-          )}
+          <button onClick={() => {
+            setRole(null);
+            setStep(2);
+            setCurrentQuestion(0);
+            setAnswers([]);
+            setMatches([]);
+          }}>Start Over</button>
+          <button onClick={() => {
+            setStep(2);
+          }}>Dashboard</button>
         </div>
-        <button onClick={() => {
-          setRole(null);
-          setStep(0);
-          setCurrentQuestion(0);
-          setAnswers([]);
-          setMatches([]);
-        }}>Start Over</button>
-        <button onClick={() => {
-          setStep(2);
-        }}>Dashboard</button>
       </div>
-    </div>
-  );
+    );
 }
 
+  if (step === 5) {
+    return (
+      <div className="app-container">
+          <h2 className="text-2xl font-bold mb-4">Course Matches</h2>
+  
+          {selectedCourse ? (
+            <>
+              <p className="text-lg font-medium text-gray-800">
+                Viewing details for <span className="font-bold">{selectedCourse}</span>
+              </p>
+  
+              {quizTaken ? (
+                <>
+                  <h3 className="text-xl font-semibold mt-6">Top TA Matches:</h3>
+                  {matches.length > 0 ? (
+                    <ul className="mt-4 space-y-2">
+                      {matches.map((match, index) => (
+                        <li key={index} className="p-3 bg-gray-100 rounded-md shadow-sm">
+                          <span className="font-semibold">{match.name}</span>
+                          <p className="text-sm text-gray-600">{match.email}</p>
+                          <p className="text-sm text-gray-600">Matching Styles: {match.matching_styles}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="mt-4 text-red-500 font-medium">No matches found for this course.</p>
+                  )}
+                </>
+              ) : (
+                <p className="mt-4 text-red-500 font-medium">Please take the quiz first!</p>
+              )}
+            </>
+          ) : (
+            <p className="text-gray-500 italic">No course selected.</p>
+          )}
+          <button onClick={() => { setStep(2); setSelectedCourse(null); }}>Dashboard</button>
+        </div>
+    );
+  }
+}
 export default App;
