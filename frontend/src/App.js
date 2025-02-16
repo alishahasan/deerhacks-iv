@@ -147,6 +147,13 @@ function App() {
   const [stylePercentages, setStylePercentages] = useState([]);
   const [preferencePercentages, setPreferencePercentages] = useState([]);
 
+  //Dashboard Classes
+  const [classes, setClasses] = useState(["Class 1", "Class 2", "Class 3"]);
+
+  const addClass = () => {
+    alert("Adding Class...");
+  };
+
   // State for login form
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -174,6 +181,7 @@ function App() {
 
 
   const questions = role === 'student' ? studentQuestions : taQuestions;
+  const subject = role === "student" ? "Learning" : "Teaching";
 
   const startQuiz = async (selectedRole) => {
     setRole(selectedRole);
@@ -361,28 +369,27 @@ function App() {
   // changed quiz to step 2, we'll change this to dashboard later and shift all the stpes iwhtin the quiz down
 if (step === 2) {
   return (
-    <div>
-      <h1>Dashboard</h1>
-      <div>
-        <h2>Quiz Section</h2>
-        <button onClick={() => startQuiz(role)}>Take the Quiz</button>
-        <div>
-          <p>Your quiz results will appear here.</p>
-        </div>
-      </div>
-      <div>
-        <h2>Your Classes</h2>
-        <button onClick={() => alert('Adding Class...')}>Add Class</button>
-        <div>
-          <p>You are currently registered in:</p>
-          <ul>
-            <li>Class 1</li>
-            <li>Class 2</li>
-            <li>Class 3</li>
-          </ul>
-        </div>
-      </div>
-    </div>
+    <div className="app-container">
+        <div className="Dashboard">
+              <h2> {subject} Style</h2>
+              <button onClick={() => startQuiz(role)}>Take the Quiz</button>
+              <div>
+                <p>Your quiz results will appear here.</p>
+              </div>
+            </div>
+            <div>
+              <h2>Your Classes</h2>
+              <button onClick={() => addClass}>Add Class</button>
+              <div>
+                <p>You are currently registered in:</p>
+                <ul>
+                  <li>Class 1</li>
+                  <li>Class 2</li>
+                  <li>Class 3</li>
+                </ul>
+              </div>
+            </div>
+          </div>
   );
   }
 
@@ -447,7 +454,7 @@ if (step === 2) {
         )}
         {/* New section for Style and Preference breakdown */}
       <div className="results">
-          <h3>Learning/Teaching Style:</h3>
+          <h3>{subject} Style:</h3>
             {stylePercentages.length != 0 ? (
               <ul>
                 {stylePercentages.map(({ name, percentage }) => (
@@ -458,7 +465,7 @@ if (step === 2) {
               <p>No style preferences recorded.</p>
             )}
 
-            <h3>Learning/Teaching Preferences:</h3>
+            <h3>{subject} Preferences:</h3>
             {preferencePercentages.length != 0 ? (
               <ul>
                 {preferencePercentages.map(({ name, percentage }) => (
@@ -477,7 +484,10 @@ if (step === 2) {
           setMatches([]);
         }}>Start Over</button>
       </div>
-    </div>
+        <button onClick={() => {
+          setStep(2);
+        }}>Dashboard</button>
+      </div>
   );
 }
 
