@@ -1,167 +1,196 @@
+/* Reset and Base Styles */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-  }
-  
-  body {
-    margin: 0;
-    padding: 0;
-  }
-  
-  .app-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #6a11cb, #2575fc);
-    color: white;
-    text-align: center;
-    padding: 20px;
-  }
-  
-  .landing, .quiz {
-    opacity: 0;
-    transform: translateY(50px);
-    animation: fadeInUp 1s ease-out forwards;
-    width: 100%;
-    max-width: 600px;
-  }
-  
-  h1 {
-    font-size: 2.5rem;
-    font-weight: 600;
-    margin-bottom: 20px;
-    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
-  }
-  
-  h2 {
-    font-size: 1.8rem;
-    margin-bottom: 20px;
-  }
-  
-  h3 {
-    font-size: 1.4rem;
-    margin-bottom: 30px;
-    line-height: 1.4;
-  }
-  
-  .role-buttons {
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    margin-top: 30px;
-  }
-  
-  button {
-    padding: 12px 25px;
-    font-size: 1.2rem;
-    font-weight: 500;
-    background: #ffffff;
-    color: #2575fc;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-    margin: 10px;
-  }
-  
-  .options {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    margin: 20px 0;
-  }
-  
-  .option {
-    width: 100%;
-    max-width: 400px;
-    padding: 15px 25px;
-    text-align: left;
-    line-height: 1.3;
-  }
-  
-  .nav-button {
-    margin-top: 20px;
-  }
-  
-  .progress-bar {
-    width: 100%;
-    height: 10px;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 5px;
-    margin-top: 30px;
-    overflow: hidden;
-  }
-  
-  .progress {
-    height: 100%;
-    background: #ffffff;
-    border-radius: 5px;
-    transition: width 0.3s ease;
-  }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', 'Poppins', system-ui, -apple-system, sans-serif;
+}
 
-  .matches {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin: 20px 0;
-    align-items: center;
-  }
-  
-  .match-card {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 20px;
-    border-radius: 10px;
-    width: 100%;
-    max-width: 400px;
-    backdrop-filter: blur(5px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .match-card h3 {
-    margin-bottom: 10px;
-    color: #ffffff;
-  }
-  
-  button:hover {
-    background: #e0e0e0;
-    transform: translateY(-3px);
-  }
-  
-  button:active {
-    transform: translateY(2px);
-  }
+/* Main Container */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #4a1491, #2575fc);
+  color: #ffffff;
+  text-align: center;
+  padding: 2rem;
+}
 
-  .login input {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 25px; /* Make input fields rounded */
-    outline: none;
-    transition: all 0.3s ease;
-  }
+/* Typography */
+h1 {
+  font-size: clamp(2rem, 5vw, 2.5rem);
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  letter-spacing: -0.5px;
+}
 
-  .login input:focus {
-    border-color: #2575fc;
-    box-shadow: 0 0 5px rgba(37, 117, 252, 0.5);
-  }
+h2 {
+  font-size: clamp(1.5rem, 4vw, 1.8rem);
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+  color: rgba(255, 255, 255, 0.95);
+}
 
-  /* Add this to your existing styles.css file */
+h3 {
+  font-size: clamp(1.1rem, 3vw, 1.4rem);
+  font-weight: 500;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Sections */
+.landing, .quiz {
+  opacity: 0;
+  transform: translateY(2rem);
+  animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  width: 100%;
+  max-width: 40rem;
+}
+
+/* Buttons */
+.role-buttons {
+  display: flex;
+  gap: 1.25rem;
+  justify-content: center;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+button {
+  padding: 0.875rem 1.75rem;
+  font-size: 1rem;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.95);
+  color: #2575fc;
+  border: none;
+  border-radius: 3rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+button:hover {
+  background: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Options and Cards */
+.options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  width: 100%;
+}
+
+.option {
+  width: 100%;
+  max-width: 28rem;
+  padding: 1.25rem 1.75rem;
+  text-align: left;
+  line-height: 1.4;
+  color: #ffffff; /* Ensures the text is white */
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  backdrop-filter: blur(10px);
+  transition: all 0.2s ease;
+}
+
+.option:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+}
+
+
+/* Progress Bar */
+.progress-bar {
+  width: 100%;
+  height: 0.5rem;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 1rem;
+  margin-top: 2rem;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 1rem;
+  transition: width 0.4s ease;
+}
+
+/* Match Cards */
+.matches {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  width: 100%;
+  align-items: center;
+}
+
+.match-card {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  width: 100%;
+  max-width: 28rem;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.match-card:hover {
+  transform: translateY(-2px);
+}
+
+/* Form Elements */
+.login input {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  margin: 0.75rem 0;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1.5rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.login input:focus {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
+}
+
+.login input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Navigation */
 .back-button {
   background: none;
   border: none;
-  color: #ffffff;
+  color: rgba(255, 255, 255, 0.8);
   font-size: 1.5rem;
   cursor: pointer;
   position: absolute;
-  top: 20px;
-  left: 20px;
+  top: 1.5rem;
+  left: 1.5rem;
+  padding: 0.5rem;
+  transition: all 0.2s ease;
 }
 
 .match-card {
@@ -215,17 +244,35 @@
 }
 
 .back-button:hover {
-  color: #1a4db8;
+  color: #ffffff;
+  transform: translateX(-2px);
 }
-  
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(50px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .app-container {
+    padding: 1.5rem;
   }
   
+  .role-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  button {
+    width: 100%;
+    max-width: 20rem;
+  }
+}
