@@ -161,6 +161,8 @@ const courses = [
   { code: "CSC309", name: "Programming on the Web", lecture: "TR 2-3", tutorial: "F 11-12" }
 ];
 
+
+
 function App() {
   const [role, setRole] = useState(null);
   const [userId, setUserId] = useState(null);
@@ -483,23 +485,11 @@ function App() {
                       <br />
                       <span className="text-sm text-gray-600">
                       </span>
-<<<<<<< HEAD
                       <button onClick={() => {setStep(5); setSelectedCourse(course.code);}} className="mt-4 text-blue-600 hover:text-blue-800 font-semibold">
                         View Course Details →
                       </button>
                       <br></br>
                     </p>
-=======
-                      {role === 'student' && ( // Fixed syntax error here
-                          <button 
-                            onClick={() => { setStep(5); setSelectedCourse(course.code); }} 
-                            className="mt-4 text-blue-600 hover:text-blue-800 font-semibold"
-                          >
-                            View Course Details →
-                          </button>
-                        )}
-                    </li>
->>>>>>> 4879b7cbb61b55668705d33d83b60095c5d74794
                   ))
                 ) : (
                   <p className="text-gray-500 italic">No classes yet! Add a class :)</p>
@@ -644,8 +634,8 @@ const topPreference = preferencePercentages.length > 0 ? preferencePercentages.r
           <h2 className="mt-12 text-center">{subject} Style:</h2>
           {topStyle ? (
             <p className="text-gray-700 mt-4 text-left leading-relaxed">
-              <strong>{topStyle.name.charAt(0).toUpperCase() + topStyle.name.slice(1).toLowerCase()}</strong> ({topStyle.percentage}%):
-              {styleDescriptions[Object.keys(styleDescriptions).find(
+              <strong>{topStyle.name.charAt(0).toUpperCase() + topStyle.name.slice(1).toLowerCase()}</strong> ({topStyle.percentage}%): 
+              {" " + styleDescriptions[Object.keys(styleDescriptions).find(
                 key => normalizeKey(key) === normalizeKey(topStyle.name)
               )] || "No description available."}
             </p>
@@ -657,8 +647,8 @@ const topPreference = preferencePercentages.length > 0 ? preferencePercentages.r
           <h2 className="mt-12 text-center">{subject} Preferences:</h2>
           {topPreference ? (
             <p className="text-gray-700 mt-4 text-left leading-relaxed">
-              <strong>{topPreference.name.charAt(0).toUpperCase() + topPreference.name.slice(1).toLowerCase()}</strong> ({topPreference.percentage}%):
-              {preferenceDescriptions[Object.keys(preferenceDescriptions).find(
+              <strong>{topPreference.name.charAt(0).toUpperCase() + topPreference.name.slice(1).toLowerCase()}</strong> ({topPreference.percentage}%): 
+              {" " + preferenceDescriptions[Object.keys(preferenceDescriptions).find(
                 key => normalizeKey(key) === normalizeKey(topPreference.name)
               )] || "No description available."}
             </p>
