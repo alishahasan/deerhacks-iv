@@ -469,6 +469,9 @@ function App() {
                       <span className="text-sm text-gray-600">
                         {course.lecture} {course.tutorial || course.lab}
                       </span>
+                      <button className="mt-4 text-blue-600 hover:text-blue-800 font-semibold">
+                        View Course Details →
+                      </button>
                     </li>
                   ))
                 ) : (
@@ -476,10 +479,7 @@ function App() {
                 )}
               </ul>
             </div>
-    
-            <button className="mt-4 text-blue-600 hover:text-blue-800 font-semibold">
-              View Course Details →
-            </button>
+  
           </div>
         </div>
       </div>
