@@ -572,7 +572,7 @@ function App() {
           </div>
           <button onClick={() => {
             setRole(null);
-            setStep(2);
+            setStep(3);
             setCurrentQuestion(0);
             setAnswers([]);
             setMatches([]);
