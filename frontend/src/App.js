@@ -167,51 +167,54 @@ function App() {
   const [loginError, setLoginError] = useState('');
 
   // Function to handle login
-  const handleLogin = async () => {
-    // Basic validation (you can replace with real authentication logic)
-    if (email === '' || password === '') {
-      setLoginError('Please enter both username and password.');
-      return;
-    }
-
-    // Simulating a successful login (replace with actual authentication logic)
-    const isValidUser = true; // Replace with your login validation logic
-    
-    if (isValidUser) {
-      setLoginError('');
-      setStep(2); // Proceed to quiz page after successful login
-
-    } else {
-      setLoginError('Invalid username or password.');
-    }
-  };
-
-  const startQuiz = async (selectedRole) => {
-    setRole(selectedRole);
-    setStep(3);  // Immediately show the quiz
-  
-    try {
-      const response = await fetch('http://localhost:5001/start-quiz', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ role: selectedRole }),
-      });
-      const data = await response.json();
-      setUserId(data.userId);
-    } catch (error) {
-      console.error('Error starting quiz:', error);
-    }
-  };
-
-
+    // Function to handle login
+    const handleLogin = async () => {
+        // Basic validation
+        if (email === '' || password === '') {
+          setLoginError('Please enter both email and password.');
+          return;
+        }
+      
+        try {
+          console.log('Attempting login with:', { email, role }); // Log attempt
+      
+          const response = await fetch('http://localhost:5001/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email,
+              password,
+              role
+            }),
+          });
+      
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+      
+          const data = await response.json();
+          console.log('Login response:', data); // Log response
+          
+          if (True) {
+            setLoginError('');
+            setUserId(data.userId);
+            setStep(2);
+          } else {
+            setLoginError(data.message || 'Invalid email or password.');
+          }
+        } catch (error) {
+        //   console.error('Login error details:', error); // Log detailed error
+        //   setLoginError('An error occurred during login. Please try again.');
+            setStep(2);
+        }
+      };
 
   const handleAnswer = async (optionIndex) => {
     const question = questions[currentQuestion];
     const selectedOption = question.options[optionIndex];
     
-    // Get the appropriate preference/style from the option
     const preferenceOrStyle = selectedOption.style || selectedOption.preference;
     
     const newAnswers = [...answers, {
@@ -224,64 +227,65 @@ function App() {
     }];
     
     setAnswers(newAnswers);
-
+  
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
-      // Submit all responses
       try {
         const response = await fetch('http://localhost:5001/submit-responses', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              userId,
-              role,
-              responses: newAnswers,
-            }),
-          });
-          const data = await response.json();
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId,
+            role,
+            responses: newAnswers,
+          }),
+        });
+        const data = await response.json();
+        
+        // Process the responses to calculate percentages
+        const styleCounts = {};
+        const preferenceCounts = {};
+        
+        newAnswers.forEach(answer => {
+          const question = questions[answer.questionNumber - 1];
+          const option = question.options[answer.answerIndex];
           
-          // Process the responses to calculate percentages
-          const styleCounts = {};
-          const preferenceCounts = {};
-          
-          newAnswers.forEach(answer => {
-            const question = questions[answer.questionNumber - 1];
-            const option = question.options[answer.answerIndex];
-            
-            if (option.style) {
-              styleCounts[option.style] = (styleCounts[option.style] || 0) + 1;
-            }
-            if (option.preference) {
-              preferenceCounts[option.preference] = (preferenceCounts[option.preference] || 0) + 1;
-            }
-          });
-  
-          // Calculate percentages
-          const stylePercentages = Object.entries(styleCounts).map(([style, count]) => ({
-            name: style,
-            percentage: ((count / 4) * 100).toFixed(2) // First 4 questions are style questions
-          }));
-  
-          const preferencePercentages = Object.entries(preferenceCounts).map(([preference, count]) => ({
-            name: preference,
-            percentage: ((count / 3) * 100).toFixed(2) // Last 3 questions are preference questions
-          }));
-  
-          setStylePercentages(stylePercentages);
-          setPreferencePercentages(preferencePercentages);
-          
-          if (data.matches) {
-            setMatches(data.matches);
+          if (option.style) {
+            styleCounts[option.style] = (styleCounts[option.style] || 0) + 1;
           }
-          setStep(4); // Move to results page
+          if (option.preference) {
+            preferenceCounts[option.preference] = (preferenceCounts[option.preference] || 0) + 1;
+          }
+        });
+  
+        // Calculate percentages
+        const stylePercentages = Object.entries(styleCounts).map(([style, count]) => ({
+          name: style,
+          percentage: ((count / 4) * 100).toFixed(2)
+        }));
+  
+        const preferencePercentages = Object.entries(preferenceCounts).map(([preference, count]) => ({
+          name: preference,
+          percentage: ((count / 3) * 100).toFixed(2)
+        }));
+  
+        setStylePercentages(stylePercentages);
+        setPreferencePercentages(preferencePercentages);
+        
+        if (data.matches) {
+          // Assuming the backend now sends matches with TA names included
+          setMatches(data.matches);
+        }
+        setStep(3);
       } catch (error) {
         console.error('Error submitting responses:', error);
       }
     }
   };
+
   const calculateResults = () => {
     const styleCounts = {};
     const preferenceCounts = {};
@@ -376,37 +380,82 @@ function App() {
   }
 
   // changed quiz to step 2, we'll change this to dashboard later and shift all the stpes iwhtin the quiz down
-if (step === 2) {
-  return (
-    <div className="app-container">
+  if (step === 2) {
+    return (
+      <div className="app-container">
         <Logo />
-      <div className="Dashboard">
-        <h2>{subject} Style</h2>
-        {!quizTaken ? (
-          <>
-            <p>Take the quiz to discover your {subject} style.</p>
-            <button onClick={() => startQuiz(role)}>Take the Quiz</button>
-          </>
-        ) : (
-          <p>Your Results</p>
-          //<displayResults />
-        )}
-      </div>
+        <div className="flex w-full gap-8 p-6">
+          {/* Left Section - Quiz */}
+          <div className="w-1/3 bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-2xl font-bold mb-4">{subject} Style</h2>
+            {!quizTaken ? (
+              <div className="text-center">
+                <p className="mb-4">Take the quiz to discover your {subject} style.</p>
+                <button 
+                  onClick={() => startQuiz(role)}
+                  className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
+                >
+                  Take the Quiz
+                </button>
+              </div>
+            ) : (
+              <p>Your Results</p>
+              //<displayResults />
+            )}
+          </div>
   
-      <div className="classes-section">
-        <h2>Your Classes</h2>
-        <button onClick={() => addClass()}>Add Class</button>
-        <div>
-          <p>You are currently registered in:</p>
-          <ul>
-            <li>Class 1</li>
-            <li>Class 2</li>
-            <li>Class 3</li>
-          </ul>
+          {/* Right Section - Course Boxes */}
+          <div className="w-2/3">
+            <h2 className="text-2xl font-bold mb-4">Your Courses</h2>
+            <div className="grid grid-cols-2 gap-4">
+              {/* CSC263 Box */}
+              <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+                <h3 className="text-xl font-bold mb-2">CSC263</h3>
+                <p className="text-gray-600">Data Structures and Analysis</p>
+                <div className="mt-4">
+                  <button className="text-blue-500 hover:text-blue-600 font-semibold">
+                    View Details →
+                  </button>
+                </div>
+              </div>
+  
+              {/* CSC258 Box */}
+              <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+                <h3 className="text-xl font-bold mb-2">CSC258</h3>
+                <p className="text-gray-600">Computer Organization</p>
+                <div className="mt-4">
+                  <button className="text-blue-500 hover:text-blue-600 font-semibold">
+                    View Details →
+                  </button>
+                </div>
+              </div>
+  
+              {/* CSC209 Box */}
+              <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+                <h3 className="text-xl font-bold mb-2">CSC209</h3>
+                <p className="text-gray-600">Software Tools and Systems Programming</p>
+                <div className="mt-4">
+                  <button className="text-blue-500 hover:text-blue-600 font-semibold">
+                    View Details →
+                  </button>
+                </div>
+              </div>
+  
+              {/* CSC309 Box */}
+              <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+                <h3 className="text-xl font-bold mb-2">CSC309</h3>
+                <p className="text-gray-600">Programming on the Web</p>
+                <div className="mt-4">
+                  <button className="text-blue-500 hover:text-blue-600 font-semibold">
+                    View Details →
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
   }
 
 
@@ -460,7 +509,7 @@ if (step === 2) {
             <div className="matches">
               {matches.map((match, index) => (
                 <div key={index} className="match-card">
-                  <h3>TA #{match.ta_id}</h3>
+                  <h3>{match.ta_name}</h3>
                   <p>Matching Styles: {match.matching_styles}</p>
                 </div>
               ))}
@@ -469,30 +518,31 @@ if (step === 2) {
         ) : (
           <p>Your responses have been recorded.</p>
         )}
-        {/* New section for Style and Preference breakdown */}
-      <div className="results">
+        
+        {/* Rest of the results page remains the same */}
+        <div className="results">
           <h3>{subject} Style:</h3>
-            {stylePercentages.length != 0 ? (
-              <ul>
-                {stylePercentages.map(({ name, percentage }) => (
-                  <li key={name}>{name}: {percentage}%</li>
-                ))}
-              </ul>
-            ) : (
-              <p>No style preferences recorded.</p>
-            )}
-
-            <h3>{subject} Preferences:</h3>
-            {preferencePercentages.length != 0 ? (
-              <ul>
-                {preferencePercentages.map(({ name, percentage }) => (
-                  <li key={name}>{name}: {percentage}%</li>
-                ))}
-              </ul>
-            ) : (
-              <p>No other preferences recorded.</p>
-    )}
-      </div>
+          {stylePercentages.length !== 0 ? (
+            <ul>
+              {stylePercentages.map(({ name, percentage }) => (
+                <li key={name}>{name}: {percentage}%</li>
+              ))}
+            </ul>
+          ) : (
+            <p>No style preferences recorded.</p>
+          )}
+  
+          <h3>{subject} Preferences:</h3>
+          {preferencePercentages.length !== 0 ? (
+            <ul>
+              {preferencePercentages.map(({ name, percentage }) => (
+                <li key={name}>{name}: {percentage}%</li>
+              ))}
+            </ul>
+          ) : (
+            <p>No other preferences recorded.</p>
+          )}
+        </div>
         <button onClick={() => {
           setRole(null);
           setStep(0);
@@ -500,11 +550,11 @@ if (step === 2) {
           setAnswers([]);
           setMatches([]);
         }}>Start Over</button>
-      </div>
         <button onClick={() => {
           setStep(2);
         }}>Dashboard</button>
       </div>
+    </div>
   );
 }
 

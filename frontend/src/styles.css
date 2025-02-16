@@ -164,6 +164,56 @@
   left: 20px;
 }
 
+.match-card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 15px 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.match-card h3 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+.match-score {
+    font-size: 1.2em;
+    color: #3498db;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.match-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.styles-section, .preferences-section {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 6px;
+}
+
+.match-details h4 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.match-details ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.match-details li {
+    background: #e9ecef;
+    margin: 5px 0;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
 .back-button:hover {
   color: #1a4db8;
 }
