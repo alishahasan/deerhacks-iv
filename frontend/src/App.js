@@ -148,6 +148,11 @@ function App() {
   const [matches, setMatches] = useState([]);
   const [stylePercentages, setStylePercentages] = useState([]);
   const [preferencePercentages, setPreferencePercentages] = useState([]);
+  const [quizTaken, setQuizTaken] = useState(false);
+
+  const questions = role === 'student' ? studentQuestions : taQuestions;
+  const subject = role === "student" ? "Learning" : "Teaching";
+
 
   //Dashboard Classes
   const [classes, setClasses] = useState(["Class 1", "Class 2", "Class 3"]);
@@ -180,10 +185,6 @@ function App() {
       setLoginError('Invalid username or password.');
     }
   };
-
-
-  const questions = role === 'student' ? studentQuestions : taQuestions;
-  const subject = role === "student" ? "Learning" : "Teaching";
 
   const startQuiz = async (selectedRole) => {
     setRole(selectedRole);
@@ -310,6 +311,9 @@ function App() {
     setPreferencePercentages(preferencePercentages);
   };
 
+  const displayResults = () => {
+  };
+
   const prevQuestion = () => {
     if (currentQuestion > 0) {
       setCurrentQuestion(currentQuestion - 1);
@@ -376,26 +380,32 @@ if (step === 2) {
   return (
     <div className="app-container">
         <Logo />
-        <div className="Dashboard">
-              <h2> {subject} Style</h2>
-              <button onClick={() => startQuiz(role)}>Take the Quiz</button>
-              <div>
-                <p>Your quiz results will appear here.</p>
-              </div>
-            </div>
-            <div>
-              <h2>Your Classes</h2>
-              <button onClick={() => addClass}>Add Class</button>
-              <div>
-                <p>You are currently registered in:</p>
-                <ul>
-                  <li>Class 1</li>
-                  <li>Class 2</li>
-                  <li>Class 3</li>
-                </ul>
-              </div>
-            </div>
-          </div>
+      <div className="Dashboard">
+        <h2>{subject} Style</h2>
+        {!quizTaken ? (
+          <>
+            <p>Take the quiz to discover your {subject} style.</p>
+            <button onClick={() => startQuiz(role)}>Take the Quiz</button>
+          </>
+        ) : (
+          <p>Your Results</p>
+          //<displayResults />
+        )}
+      </div>
+  
+      <div className="classes-section">
+        <h2>Your Classes</h2>
+        <button onClick={() => addClass()}>Add Class</button>
+        <div>
+          <p>You are currently registered in:</p>
+          <ul>
+            <li>Class 1</li>
+            <li>Class 2</li>
+            <li>Class 3</li>
+          </ul>
+        </div>
+      </div>
+    </div>
   );
   }
 
@@ -424,7 +434,7 @@ if (step === 2) {
             </button>
           )}
            {currentQuestion === questions.length - 1 ? (
-            <button onClick={() => setStep(4)} className="finish-button">
+            <button onClick={() => {setStep(4); setQuizTaken(true);}} className="finish-button">
               Finish Quiz
             </button>
           ) : null}
